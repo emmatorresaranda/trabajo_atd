@@ -32,7 +32,7 @@ for item in data:
 
 rows = [countries_by_iso2[k] for k in sorted(countries_by_iso2)]  
 
-fields = ["iso2", "iso3", "country_common_name", "region", "subregion", "population", "area_km2"]  # Columnas
+fields = ["iso2", "iso3", "country_common_name", "region", "subregion", "population", "area_km2"]  
 
 with open("fetch_countries.csv", "w", newline="", encoding="utf-8") as f:  
     w = csv.DictWriter(f, fieldnames=fields, delimiter=";")        
