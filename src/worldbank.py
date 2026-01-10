@@ -1,8 +1,7 @@
 '''
 obtener un csv con el índice de gasto público en educación de los países incluidos en el top 100
 utilizando API Rest
-'''
-from pathlib import Path                                 
+'''                                
 import csv                                               
 import requests                                           
 
