@@ -1,8 +1,7 @@
 '''
 obtener un csv con información de distintos países (nombre, habitantes, superficie...)
 utilizando API Rest
-'''
-from pathlib import Path                                  
+'''                             
 import csv                                                
 import requests                                           
 
