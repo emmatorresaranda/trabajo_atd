@@ -14,7 +14,6 @@ with open("arwu_bs4.csv", newline="", encoding="utf-8") as f:
     reader = csv.reader(f,delimiter=';')
     next(reader)  # saltar cabecera
     for row in reader:
-        
         country=row[1]
         if country not in countries:
             countries.append(country)
@@ -53,3 +52,4 @@ with open("tertiary_education_simple.csv", "w", newline="", encoding="utf-8") as
 
 driver.quit()
 print("CSV generado correctamente: tertiary_education_simple.csv")
+
