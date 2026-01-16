@@ -1,51 +1,54 @@
-'''
-obtener un csv con el índice de educación terciaria de los países incluidos en el top 100
-utilizando Selenium
-'''
+# -- coding: utf-8 --
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import csv
-import time
-import re
 
-countries = set()
+countries = []
 
 with open("arwu_bs4.csv", newline="", encoding="utf-8") as f:
     reader = csv.reader(f,delimiter=';')
     next(reader)  # saltar cabecera
     for row in reader:
         country=row[1]
-        countries.add(country)
-# Inicializar el driver
-driver = webdriver.Firefox()
-driver.get("https://en.wikipedia.org/wiki/List_of_countries_by_tertiary_education_attainment")
-time.sleep(3)  # Espera para que cargue la tabla
+        if country not in countries:
+            countries.append(country)
 
-print(f"Número de países: {len(countries)}")
+url = "https://ourworldindata.org/grapher/share-of-the-population-with-completed-tertiary-education?tab=table"
 
-tertiary_education = {}
+driver = webdriver.Chrome()
+driver.get(url)
 
-table = driver.find_element(By.CSS_SELECTOR, "table.wikitable")
+# Esperar a que cargue la tabla
+wait = WebDriverWait(driver, 20)  # hasta 20 segundos
+
+table = wait.until(EC.presence_of_element_located((By.TAG_NAME, "table")))
 rows = table.find_elements(By.TAG_NAME, "tr")
 
-for row in rows:
-    cells = row.find_elements(By.TAG_NAME, "td")
-    if len(cells) >= 6:
-        country_name = cells[0].text.strip()
-        value = re.sub(r"\[.*\]", "", cells[5].text.strip())
-        if country_name in countries:
-            tertiary_education[country_name] = value
-driver.quit()
+data_dict = {}
+for row in rows[1:]:
+    cols = row.find_elements(By.TAG_NAME, "td")
+    if len(cols) < 3:
+        continue
+    name = cols[0].text.strip()
+    value = cols[2].text.strip()
+    data_dict[name.lower()] = value
 
-# Mostrar resultados
-for pais, valor in tertiary_education.items():
-    print(f"{pais}: {valor}")
+tertiary_education = {}
+for country in countries:
+    # buscar en data_dict por minúsculas, si no existe poner "No encontrado"
+    tertiary_education[country] = data_dict.get(country.lower(), "No encontrado")
 
-# CSV
+# Mostrar resultado como diccionario
+print(tertiary_education)
+
+# Guardar CSV con formato: Pais;Tasa_educacion_terciaria
 with open("tertiary_education_simple.csv", "w", newline="", encoding="utf-8") as f:
-    w = csv.writer(f,delimiter=';')
+    w = csv.writer(f, delimiter=';')
     w.writerow(["Pais", "Tasa_educacion_terciaria"])
     for pais, valor in tertiary_education.items():
         w.writerow([pais, valor])
 
+driver.quit()
 print("CSV generado correctamente: tertiary_education_simple.csv")
