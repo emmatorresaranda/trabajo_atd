@@ -1,4 +1,7 @@
-# -- coding: utf-8 --
+'''
+obtener un csv con el índice de educación terciaria de los países incluidos en el top 100
+utilizando Selenium
+'''
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -51,4 +54,5 @@ with open("tertiary_education_simple.csv", "w", newline="", encoding="utf-8") as
         w.writerow([pais, valor])
 
 driver.quit()
+
 print("CSV generado correctamente: tertiary_education_simple.csv")
