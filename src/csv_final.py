@@ -40,7 +40,7 @@ with open("final_dataset.csv", "w", newline="", encoding="utf-8") as out:
         for row in csv.DictReader(f, delimiter=";"):
             iso2 = row["iso2"]
 
-            if iso2 not in worldbank:   # 🔹 FILTRO CLAVE (1 línea)
+            if iso2 not in worldbank:   
                 continue
 
             country = row["country_common_name"]
